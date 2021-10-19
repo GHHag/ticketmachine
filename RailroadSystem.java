@@ -1,3 +1,4 @@
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.time.LocalTime;
@@ -161,8 +162,9 @@ public class RailroadSystem {
      * @param departureStation, String, the name of the departure station.
      */
     public void getDepartures (String destinationStation, String departureStation){
-        System.out.println("Current time: ");
-        System.out.println(java.time.LocalTime.now());
+        LocalTime lt = java.time.LocalTime.now();
+        System.out.println("\nCurrent time: ");
+        System.out.println(lt);
 
         for(ArrayList<String> route : this.routes){
             if (route.contains(destinationStation) && route.contains(departureStation)){
@@ -176,6 +178,12 @@ public class RailroadSystem {
                         "Coming departures from " + departureStation +
                         " on this route travelling towards " + destinationStation +
                         " departs at: ");
+                for(int n : departureMinutes){
+                    int minutesToDeparture = n - lt.getMinute();
+                    if(minutesToDeparture >= 0){
+                        System.out.println(lt.plus(minutesToDeparture, ChronoUnit.MINUTES));
+                    }
+                }
             }
         }
     }
@@ -216,16 +224,11 @@ public class RailroadSystem {
                          route in the current iteration.
                         */
                         if(shortestRoute.size() == 0 ||
-                           Math.abs(
-                                   route.indexOf(ticket.getDestinationStation()) -
-                                   route.indexOf(ticket.getDepartureStation())
-                           )
+                           Math.abs(route.indexOf(ticket.getDestinationStation()) -
+                                    route.indexOf(ticket.getDepartureStation()))
                                <
-                           Math.abs(
-                                   shortestRoute.indexOf(ticket.getDestinationStation()) -
-                                   shortestRoute.indexOf(ticket.getDepartureStation())
-                           )
-                        ){
+                           Math.abs(shortestRoute.indexOf(ticket.getDestinationStation()) -
+                                    shortestRoute.indexOf(ticket.getDepartureStation()))){
                             shortestRoute = route;
                         }
                     }

@@ -61,9 +61,7 @@ public class Traveler implements Serializable{
      */
     @Override
     public String toString() {
-        return "Traveler{" +
-                "travelerType=" + travelerType +
-                '}';
+        return travelerType.toString();
     }
 
     /**

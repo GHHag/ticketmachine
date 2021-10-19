@@ -27,7 +27,7 @@ public class Main {
             System.out.println("Failed to load tickets. Please contact support.");
         }
         else{
-            System.out.println("Tickets was loaded successfully.");
+            System.out.println("Tickets loaded successfully.");
         }
 
         // Calls method to display a menu, presenting choices to the user

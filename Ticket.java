@@ -15,6 +15,7 @@ public class Ticket implements Serializable{
     private ArrayList<Traveler> travelers;
     private String destinationStation;
     private String departureStation;
+    private String departureTime;
 
     /**
      * Constructor
@@ -25,9 +26,10 @@ public class Ticket implements Serializable{
     public Ticket(String destinationStation, String departureStation, int ticketId){
         this.ticketId = ticketId;
         this.totalPrice = 0;
+        this.travelers = new ArrayList<Traveler>();
         this.destinationStation = destinationStation;
         this.departureStation = departureStation;
-        this.travelers = new ArrayList<Traveler>();
+        this.departureTime = "Unspecified";
     }
 
     /**
@@ -55,33 +57,6 @@ public class Ticket implements Serializable{
     }
 
     /**
-     * Returns a String representation of the ticket.
-     * @return String
-     */
-    @Override
-    public String toString() {
-        String travelersString = this.travelers.toString();
-        return "Ticket{" +
-                "Ticket ID=" + this.ticketId +
-                ", Total Price=" + this.totalPrice +
-                ", Travelers=" + travelersString +
-                ", Destination='" + this.destinationStation + '\'' +
-                ", Departure='" + this.departureStation + '\'' +
-                '}';
-    }
-
-    /**
-     * Adds a traveler to the tickets list of travelers and adds the cost of that
-     * traveler to the tickets total price.
-     * @param travelerType, Enum TravelerType from the Traveler class.
-     */
-    public void addTraveler(Traveler.TravelerType travelerType){
-        Traveler traveler = new Traveler(travelerType);
-        this.travelers.add(traveler);
-        this.totalPrice += (TICKET_BASE_PRICE - TICKET_BASE_PRICE * traveler.getDiscountRate());
-    }
-
-    /**
      * Getter for the departure station.
      * @return String
      */
@@ -95,5 +70,41 @@ public class Ticket implements Serializable{
      */
     public String getDestinationStation() {
         return this.destinationStation;
+    }
+
+    /**
+     * Setter for the departure time.
+     * @param departureTime, String, the time of departure.
+     */
+    public void setDepartureTime(String departureTime){
+        this.departureTime = departureTime;
+    }
+
+    /**
+     * Returns a String representation of the ticket.
+     * @return String
+     */
+    @Override
+    public String toString() {
+        String travelersString = this.travelers.toString();
+        return "Ticket{" +
+                "Ticket ID=" + this.ticketId +
+                ", Total Price=" + this.totalPrice +
+                ", Travelers=" + travelersString +
+                ", Destination='" + this.destinationStation + '\'' +
+                ", Departure='" + this.departureStation + '\'' +
+                ", Time of departure='" + this.departureTime + '\'' +
+                '}';
+    }
+
+    /**
+     * Adds a traveler to the tickets list of travelers and adds the cost of that
+     * traveler to the tickets total price.
+     * @param travelerType, Enum TravelerType from the Traveler class.
+     */
+    public void addTraveler(Traveler.TravelerType travelerType){
+        Traveler traveler = new Traveler(travelerType);
+        this.travelers.add(traveler);
+        this.totalPrice += (TICKET_BASE_PRICE - TICKET_BASE_PRICE * traveler.getDiscountRate());
     }
 }

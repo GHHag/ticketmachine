@@ -5,7 +5,8 @@ import java.time.LocalTime;
 
 public class RailroadSystem {
     /**
-     * A class containing logic and functionality for managing a railroad system.
+     * A class containing logic and functionality for managing a railroad systems
+     * routes, stations and tickets.
      *
      * Author: Gustav Hagenblad
      * 2021-10
@@ -103,7 +104,6 @@ public class RailroadSystem {
     public double getTicketTotalPrice(int ticketIdToPay){
         for(Ticket ticket : this.tickets){
             if(ticket.getTicketId() == ticketIdToPay){
-
                 return ticket.getTotalPrice();
             }
         }
@@ -156,23 +156,37 @@ public class RailroadSystem {
     }
 
     /**
-     * Gets the time departing trains from the given departure station heading to the given
+     * Gets the time for departing trains from the given departure station heading to the given
      * destination station.
      * @param destinationStation, String, the name of the destination station.
      * @param departureStation, String, the name of the departure station.
      */
-    public void getDepartures (String destinationStation, String departureStation){
+    public ArrayList<String> getDepartures (String destinationStation, String departureStation){
+        ArrayList<String> departureTimes = new ArrayList<String>();
+
+        // Gets the current time
         LocalTime lt = java.time.LocalTime.now();
         System.out.println("\nCurrent time: ");
-        System.out.println(lt);
+        System.out.println(lt + "\n");
 
+        // Iterate over the list with routes
         for(ArrayList<String> route : this.routes){
+            // If the route contains both the destination and departure station following block is executed.
             if (route.contains(destinationStation) && route.contains(departureStation)){
+                // The amount of departures per hour will be set to 24 divided by the number of
+                // stations in the route but rounded down to an integer.
                 int departuresPerHour = 24 / route.size();
                 int[] departureMinutes = new int[departuresPerHour];
+                // A for loop running as many times as the value of departuresPerHour
                 for (int i = 0; i < departuresPerHour; i++) {
+                    /*
+                     The minute for when a train departure is happening will be the same for every hour,
+                     e.g. if a train on a certain route leaves at 14.20, another train on that route will
+                     be leaving 15.20 from that station.
+                     */
                     departureMinutes[i] = 60 / departuresPerHour * (i+1);
                 }
+                // Prints the stations of the route and the estimated time of departures
                 System.out.println(route);
                 System.out.println(
                         "Coming departures from " + departureStation +
@@ -180,10 +194,24 @@ public class RailroadSystem {
                         " departs at: ");
                 for(int n : departureMinutes){
                     int minutesToDeparture = n - lt.getMinute();
-                    if(minutesToDeparture >= 0){
-                        System.out.println(lt.plus(minutesToDeparture, ChronoUnit.MINUTES));
-                    }
+                    System.out.println(departureTimes.size() + ". " + lt.plus(minutesToDeparture, ChronoUnit.MINUTES));
+                    departureTimes.add(lt.plus(minutesToDeparture, ChronoUnit.MINUTES).toString());
                 }
+                System.out.println();
+            }
+        }
+        return departureTimes;
+    }
+
+    /**
+     * Sets the field for departure time on the Ticket object with the given ticket id.
+     * @param ticketId, int, the id of the ticket to set the departure time for.
+     * @param time, String, a String with a time stamp.
+     */
+    public void userSelectTime(int ticketId, String time){
+        for(Ticket ticket : this.tickets) {
+            if(ticket.getTicketId() == ticketId) {
+                ticket.setDepartureTime(time);
             }
         }
     }

@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     /**
      * Class containing the main method of the program.
-     * Handles interactions with the user with input and output.
+     * Handles interactions with the user, input and output.
      *
      * Author: Gustav Hagenblad
      * 2021-10
@@ -18,10 +19,10 @@ public class Main {
      */
     public static void main(String[] args) {
         // Creates and instance of the RailroadSystem class.
-        rrs = createRailroadSystem();
+        rrs = new RailroadSystem();
 
         // Attempts to load saved tickets. Gives output accordingly whether the tickets
-        // was loaded successfully or not.
+        // were loaded successfully or not.
         boolean loadSuccess = rrs.loadTickets();
         if(!loadSuccess){
             System.out.println("Failed to load tickets. Please contact support.");
@@ -32,14 +33,6 @@ public class Main {
 
         // Calls method to display a menu, presenting choices to the user
         mainMenu();
-    }
-
-    /**
-     * Creates and returns an instance of the RailroadSystem class.
-     * @return RailroadSystem
-     */
-    private static RailroadSystem createRailroadSystem(){
-        return new RailroadSystem();
     }
 
     /**
@@ -54,7 +47,7 @@ public class Main {
                 "4. Exit"
         );
         String userChoice = input.next();
-        // Switch case block that performs different actions depending on the given input
+        // Switch case block that performs different actions depending on the given input.
         switch (userChoice){
             case "1":
                 // Calls method to create a Ticket object
@@ -112,10 +105,22 @@ public class Main {
         // Call method to let the user add travelers. Pass ticket ID as argument.
         userAddTravelers(ticketId);
 
-        rrs.getDepartures(rrs.getStations().get(destination),
-                          rrs.getStations().get(departureStation));
+        // Calls method to get available routes for the ticket with the provided id.
+        rrs.getAvailableRoutes(ticketId);
 
-        // Call method to let the user pay. Pass ticket ID as arument.
+        // Gets upcoming departure times for travels between the selected stations.
+        ArrayList<String> departureTimes = rrs.getDepartures(rrs.getStations().get(destination),
+                                                             rrs.getStations().get(departureStation));
+        // The user selects departure.
+        if(departureTimes.size() > 0){
+            System.out.println("Select time of departure: ");
+            int selectedTime = input.nextInt();
+            System.out.println(departureTimes.get(selectedTime));
+            // Calls method to add the selected time to the Ticket object.
+            rrs.userSelectTime(ticketId, departureTimes.get(selectedTime));
+        }
+
+        // Call method to let the user pay. Passing ticket ID as argument.
         userPay(ticketId, rrs.getTicketTotalPrice(ticketId));
     }
 
@@ -191,7 +196,7 @@ public class Main {
             userPay(ticketId, amount);
         }
 
-        // Attempts to verify the payment through a call to the RailroadSystem's
+        // Attempts to verify the payment through a call to the RailroadSystems
         // verifyPayment method.
         if(!rrs.verifyPayment(ticketId, amountPayed)){
             System.out.println(
@@ -208,8 +213,6 @@ public class Main {
             else{
                 System.out.println("Ticket saved successfully.");
             }
-            // Calls method to get available routes for the ticket with the provided id.
-            rrs.getAvailableRoutes(ticketId);
             mainMenu();
         }
     }

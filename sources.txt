@@ -1,0 +1,10 @@
+FileManager.java
+Traveler.java
+Ticket.java
+RailroadSystem.java
+Main.java
+
+/*
+> dir /s /B *.java > sources.txt
+> javac @sources.txt
+*/
